@@ -1,0 +1,62 @@
+type Blog {
+  author: String
+  body: String
+  created_at: DateTime
+  id: ID!
+  title: String
+}
+
+"""
+These are some examples of queries generated from the schema. Feel free to modify them or add your own.
+"""
+type Query {
+  getBlogs: [Blog]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "blog"
+      configuration: "postgresql_config"
+    )
+    getBlogByAuthor(author:String!):Blog
+     @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      select * from "blog" where "author"=$1
+      """
+      configuration: "postgresql_config"
+    )
+  getBlog(id: ID!): Blog
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "blog"
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+These are some examples of mutations generated from the schema. Feel free to modify them or add your own.
+"""
+type Mutation {
+  addBlog(
+    author: String!
+    body: String!
+    title: String!
+  ): Blog
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "blog"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  deleteBlog(id: ID!): Blog
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "blog"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+}
